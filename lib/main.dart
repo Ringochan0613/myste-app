@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
       parameters = List<Map<String, dynamic>>.from(jsonDecode(saved));
     } else {
       parameters = [
-        {'name': '体力', 'value': 0},
-        {'name': '知力', 'value': 0},
-        {'name': '魅力', 'value': 0},
+        {'name': '仕事', 'value': 0},
+        {'name': '勉強', 'value': 0},
+        {'name': '運動', 'value': 0},
       ];
     }
 
@@ -299,8 +299,140 @@ class _HomeScreenState extends State<HomeScreen> {
   Colors.lime.shade100,
   Colors.amber.shade100,
   Colors.deepOrange.shade100,
-];
+  ];
+  
+  int getWeightedValue(String type) {
+    final rand = random.nextDouble();
 
+    if (type == "good") {
+      if (rand < 0.2) return 6;
+      if (rand < 0.7) return 5;
+      return 4;
+    }
+
+    if (type == "normal") {
+      if (rand < 0.2) return 5;
+      if (rand < 0.7) return 4;
+      return 3;
+    }
+
+    if (type == "bad") {
+      if (rand < 0.2) return 4;
+      if (rand < 0.7) return 3;
+      return 2;
+    }
+
+    return 3;
+  }
+
+  void increaseParamWithResult(int index, String type) {
+    int add = getWeightedValue(type);
+
+    setState(() {
+      parameters[index]['value'] += add;
+
+      if (parameters[index]['value'] > 250) {
+        parameters[index]['value'] = 250;
+      }
+      if (todayCount < 5) {
+        todayCount++;
+      }
+      // +演出
+      floatingTexts[index] = add;
+    });
+
+    Future.delayed(const Duration(milliseconds: 800), () {
+      setState(() {
+        floatingTexts.remove(index);
+      });
+    });
+
+    saveData();
+  }
+    
+  void showResultDialog(int index) {
+    if (todayCount >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('今日はもう5回実行済み！')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("出来栄えを選択"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  increaseParamWithResult(index, "good");
+                },
+                child: const Text("😊 良い"),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  increaseParamWithResult(index, "normal");
+                },
+                child: const Text("😐 普通"),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  increaseParamWithResult(index, "bad");
+                },
+                child: const Text("😢 悪い"),
+              ),
+
+              const SizedBox(height: 10),
+
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("戻る"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void resetParameters() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("本当にリセット？"),
+          content: const Text("すべてのパラメータが0になります"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  for (var p in parameters) {
+                    p['value'] = 0;
+                  }
+                });
+                saveData();
+                Navigator.pop(context);
+              },
+              child: const Text("リセット"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -335,22 +467,27 @@ class _HomeScreenState extends State<HomeScreen> {
               /// パラメータ一覧
               Expanded(
                 child: Column(
-                  children: List.generate(parameters.length, (index) {
+                  children: List.generate(8, (index) {
+                    if (index >= parameters.length) {
+                      // 空白（パラメータが少ない時）
+                      return const Expanded(child: SizedBox());
+                    }
+
                     final p = parameters[index];
 
-                    return Expanded( // ←これが重要🔥
+                    return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: GestureDetector(
-                          onTap: () => increaseParam(index),
+                          onTap: () => showResultDialog(index),
                           child: Stack(
                             children: [
 
                               /// 背景
                               Image.asset(
                                 'assets/images/para.png',
-                                height: double.infinity,
                                 width: double.infinity,
+                                height: double.infinity,
                                 fit: BoxFit.fill,
                               ),
 
@@ -417,9 +554,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsetsGeometry.only(top: 25),
+                      padding: const EdgeInsets.only(top: 25),
                       child: Text(
-                        "残り ${5 - todayCount}回",
+                        "残り ${max(0, 5 - todayCount)}回",
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
@@ -431,7 +568,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Row(
                 children: [
-
                   /// 追加
                   Expanded(
                     child: GestureDetector(
@@ -455,7 +591,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   const SizedBox(width: 20),
-
                   /// 削除
                   Expanded(
                     child: GestureDetector(
@@ -478,6 +613,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
+              ),
+              
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: resetParameters,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/button.png',
+                      height: 80,
+                      width: double.infinity,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      "パラメータリセット",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
