@@ -351,58 +351,74 @@ class _HomeScreenState extends State<HomeScreen> {
   }
     
   void showResultDialog(int index) {
-    if (todayCount >= 5) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('今日はもう5回実行済み！')),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("出来栄えを選択"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  increaseParamWithResult(index, "good");
-                },
-                child: const Text("😊 良い"),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  increaseParamWithResult(index, "normal");
-                },
-                child: const Text("😐 普通"),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  increaseParamWithResult(index, "bad");
-                },
-                child: const Text("😢 悪い"),
-              ),
-
-              const SizedBox(height: 10),
-
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("戻る"),
-              ),
-            ],
-          ),
-        );
-      },
+  if (todayCount >= 5) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('今日はもう5回実行済み！')),
     );
+    return;
   }
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("出来栄えを選択"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            /// 良い
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                increaseParamWithResult(index, "good");
+              },
+              child: Image.asset(
+                'assets/images/good.png',
+                height: 60,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            /// 普通
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                increaseParamWithResult(index, "normal");
+              },
+              child: Image.asset(
+                'assets/images/normal.png',
+                height: 60,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            /// 悪い
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                increaseParamWithResult(index, "bad");
+              },
+              child: Image.asset(
+                'assets/images/bad.png',
+                height: 60,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("戻る"),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   void resetParameters() {
     showDialog(
