@@ -1,14 +1,7 @@
 workflows:
-  android-release:
-    name: Android Release Build
-    max_build_duration: 60
-
+  ios-workflow:
+    name: iOS Workflow
     environment:
-      flutter: stable
-
-    scripts:
-      - flutter pub get
-      - flutter build appbundle --release
-
-    artifacts:
-      - build/app/outputs/bundle/release/app-release.aab
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.example.tokimemo
