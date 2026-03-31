@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
@@ -33,11 +37,24 @@ class _HomeScreenState extends State<HomeScreen> {
   int todayCount = 0;
   String todayKey = "";
   Color bgColor = Colors.white;
+  BannerAd? _bannerAd;
 
   @override
   void initState() {
     super.initState();
     loadData();
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-2166954523208068/4000621690',
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   String getTodayKey() {
@@ -471,7 +488,6 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-
               /// 日付
               Text(
                 "${now.month}月 ${now.day}日",
@@ -650,7 +666,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            ],
+              
+              if (_bannerAd != null)
+                Container(
+                  alignment: Alignment.center,
+                  height: 50,
+                  child: AdWidget(ad: _bannerAd!),
+                ),
+            ],           
           ),
         ),
       ),
