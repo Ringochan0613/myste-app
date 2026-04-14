@@ -153,8 +153,12 @@ class _HomeScreenState extends State<HomeScreen> {
         return AlertDialog(
           title: const Text("パラメータ名入力"),
           content: TextField(
+            maxLength: 8,
             onChanged: (value) => input = value,
-            decoration: const InputDecoration(hintText: "例：運動"),
+            decoration: const InputDecoration(
+              hintText: "例：運動",
+              counterText: "",
+            ),
           ),
           actions: [
             TextButton(
@@ -170,7 +174,24 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
+    input = input.trim();
+
     if (input.isEmpty) return;
+    if (input.length > 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('8文字以内で入力してください')),
+        );
+        return;
+    }
+
+    final isDuplicate = parameters.any((p) => p['name'].toString().trim().toLowerCase() == input.toLowerCase());
+
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('同じ名前は使えません')),
+        );
+        return;
+    }
 
     setState(() {
       parameters.add({
