@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,12 +40,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Color bgColor = Colors.white;
   BannerAd? _bannerAd;
 
+  // 広告
   @override
   void initState() {
     super.initState();
     loadData();
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-2166954523208068/6803285524',
+      adUnitId: Platform.isIOS
+          ?'ca-app-pub-2166954523208068/6803285524'
+          :'ca-app-pub-2166954523208068/4000621690',
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(),

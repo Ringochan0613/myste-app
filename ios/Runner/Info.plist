@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-2166954523208068~1888341519</string>
+
+	<key>NSUserTrackingUsageDescription</key>
+	<string>広告表示のためにトラッキングを使用します</string>
+
 </dict>
 </plist>
