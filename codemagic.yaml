@@ -13,4 +13,6 @@ workflows:
     publishing:
       app_store_connect:
         api_key: ios-build
+        key_id: 3ZQ6STLB2Q
+        issuer_id: 2a4be50c-7608-4732-8a8c-26a27e134c69
     
