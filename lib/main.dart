@@ -52,7 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // 広告
   @override
   void initState() {
-    super.initState();
+    super.initState();  
+    initATT();
     loadData();
     _bannerAd = BannerAd(
       adUnitId: Platform.isIOS
@@ -62,6 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
       request: const AdRequest(),
       listener: BannerAdListener(),
     )..load();
+  }
+
+  Future<void> initATT() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
   }
 
   @override
