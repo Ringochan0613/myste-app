@@ -4,21 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io';
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await requestTrackingPermission();
   MobileAds.instance.initialize();
   runApp(const MyApp());
-}
-
-Future<void> requestTrackingPermission() async {
-  final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-
-  if (status == TrackingStatus.notDetermined) {
-    await AppTrackingTransparency.requestTrackingAuthorization();
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();  
-    initATT();
     loadData();
     _bannerAd = BannerAd(
       adUnitId: Platform.isIOS
@@ -63,16 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
       request: const AdRequest(),
       listener: BannerAdListener(),
     )..load();
-  }
-
-  Future<void> initATT() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-
-    if (status == TrackingStatus.notDetermined) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
   }
 
   @override
