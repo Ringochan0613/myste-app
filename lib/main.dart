@@ -50,7 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
           :'ca-app-pub-2166954523208068/4000621690',
       size: AdSize.banner,
       request: const AdRequest(),
-      listener: BannerAdListener(),
+      // listener: BannerAdListener(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          print('広告ロード成功');
+        },
+        onAdFailedToLoad: (_, error) {
+          print('広告失敗: $error');
+        },
+      ),
     )..load();
   }
 
@@ -83,7 +91,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final saved = prefs.getString('params');
 
     if (saved != null) {
-      parameters = List<Map<String, dynamic>>.from(jsonDecode(saved));
+      try {
+        parameters = List<Map<String, dynamic>>.from(jsonDecode(saved));
+      } catch (e) {
+        parameters = [
+          {'name': '仕事', 'value': 0},
+          {'name': '勉強', 'value': 0},
+          {'name': '運動', 'value': 0},
+        ];
+      }
     } else {
       parameters = [
         {'name': '仕事', 'value': 0},
@@ -95,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final colorValue = prefs.getInt('bgColor') ?? Colors.white.value;
     bgColor = Color(colorValue);
 
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -130,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // 1.2秒後に消す
     Future.delayed(const Duration(milliseconds: 1200), () {
+      if (!mounted) return;
       setState(() {
         floatingTexts.remove(index);
       });
@@ -144,16 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    String input = "";
-
-    await showDialog(
+    final input = await showDialog<String>(
       context: context,
       builder: (context) {
+        String temp = "";
+
         return AlertDialog(
           title: const Text("パラメータ名入力"),
           content: TextField(
             maxLength: 8,
-            onChanged: (value) => input = value,
+            onChanged: (value) => temp = value,
             decoration: const InputDecoration(
               hintText: "例：運動",
               counterText: "",
@@ -161,11 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(context, null), // ←キャンセル
               child: const Text("キャンセル"),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(context, temp), // ←OK
               child: const Text("OK"),
             ),
           ],
@@ -173,28 +191,33 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
-    input = input.trim();
+    if (input == null) return; // ←これが超重要
 
-    if (input.isEmpty) return;
-    if (input.length > 8) {
+    final trimmed = input.trim();
+
+    if (trimmed.isEmpty) return;
+
+    if (trimmed.length > 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('8文字以内で入力してください')),
-        );
-        return;
+      );
+      return;
     }
 
-    final isDuplicate = parameters.any((p) => p['name'].toString().trim().toLowerCase() == input.toLowerCase());
+    final isDuplicate = parameters.any(
+      (p) => p['name'].toString().toLowerCase() == trimmed.toLowerCase(),
+    );
 
     if (isDuplicate) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('同じ名前は使えません')),
-        );
-        return;
+      );
+      return;
     }
 
     setState(() {
       parameters.add({
-        'name': input,
+        'name': trimmed,
         'value': 0,
       });
     });
@@ -383,6 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     Future.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
       setState(() {
         floatingTexts.remove(index);
       });
