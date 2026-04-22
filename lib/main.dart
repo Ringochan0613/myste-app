@@ -37,238 +37,127 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey keyRemain = GlobalKey();
   final GlobalKey keyAdd = GlobalKey();
   final GlobalKey keyDelete = GlobalKey();
+  final GlobalKey keyResultDialog = GlobalKey();
+
   // チュートリアル関数
-  void showTutorial() {
-    final targets = [
-      TargetFocus(
-        identify: "param",
-        keyTarget: keyParam,
-        enableOverlayTab: true,
-        enableTargetTab: true,
-        contents: [
-          // TargetContent(
-          //   align: ContentAlign.bottom,
-          //   child: Text(
-          //     "パラメータをタップすると記録できます",
-          //     style: TextStyle(color: Colors.white, fontSize: 16),
-          //   ),
-          // ),
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  "パラメータをタップすると記録できます",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            },
-          ),
+  Widget _bubble(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 8),
         ],
       ),
-
-      TargetFocus(
-        identify: "result",
-        keyTarget: keyParam,
-        enableOverlayTab: true,
-        enableTargetTab: true,
-        contents: [
-          // TargetContent(
-          //   align: ContentAlign.bottom,
-          //   child: Text(
-          //     "出来栄え（良い・普通・悪い）を選びます",
-          //     style: TextStyle(color: Colors.white, fontSize: 16),
-          //   ),
-          // ),
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  "出来栄え（良い・普通・悪い）を選びます",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black),
       ),
+    );
+  }
 
-      TargetFocus(
-        identify: "count",
-        keyTarget: keyRemain,
-        enableOverlayTab: true,
-        enableTargetTab: true,
-        contents: [
-          // TargetContent(
-          //   align: ContentAlign.top,
-          //   child: Text(
-          //     "1日5回まで記録できます",
-          //     style: TextStyle(color: Colors.white, fontSize: 16),
-          //   ),
-          // ),
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  "1日5回まで記録できます",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      TargetFocus(
-        identify: "add",
-        keyTarget: keyAdd,
-        enableOverlayTab: true,
-        enableTargetTab: true,
-        contents: [
-          // TargetContent(
-          //   align: ContentAlign.top,
-          //   child: Text(
-          //     "パラメータは最大8個まで追加できます",
-          //     style: TextStyle(color: Colors.white, fontSize: 16),
-          //   ),
-          // ),
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  "パラメータは最大8個まで追加できます",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      TargetFocus(
-        identify: "delete",
-        keyTarget: keyDelete,
-        enableOverlayTab: true,
-        enableTargetTab: true,
-        contents: [
-          // TargetContent(
-          //   align: ContentAlign.top,
-          //   child: Text(
-          //     "不要なパラメータは削除できます",
-          //     style: TextStyle(color: Colors.white, fontSize: 16),
-          //   ),
-          // ),
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  "不要なパラメータは削除できます",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    ];
-
+  void showTutorialStep1() {
     TutorialCoachMark(
-      targets: targets,
-      colorShadow: Colors.black,
-      opacityShadow: 0.7,
-      textSkip: "スキップ",
+      targets: [
+        TargetFocus(
+          identify: "param",
+          keyTarget: keyParam,
+          enableOverlayTab: true,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, __) => _bubble("パラメータをタップすると記録できます"),
+            ),
+          ],
+        ),
+      ],
+      onFinish: () {
+        showResultTutorial(); // ←次へ🔥
+      },
+    ).show(context: context);
+  }
+
+  void showResultTutorial() {
+    // 先に出来栄え画面を出す
+    if (parameters.isNotEmpty){
+      showResultDialog(0);
+    }
+    
+    // 少し待ってからチュートリアル
+    Future.delayed(const Duration(milliseconds: 300), () {
+      TutorialCoachMark(
+        targets: [
+          TargetFocus(
+            identify: "result",
+            keyTarget: keyResultDialog,
+            enableOverlayTab: true,
+            contents: [
+              TargetContent(
+                align: ContentAlign.top,
+                builder: (_, __) => _bubble("出来栄え（良い・普通・悪い）を選びます"),
+              ),
+            ],
+          ),
+        ],
+        onFinish: () {
+          Navigator.pop(context);
+          Future.delayed(const Duration(milliseconds: 200), () {
+            if (!mounted) return;
+            showBottomTutorial();
+          });
+        },
+      ).show(context: context);
+    });
+  }
+
+  void showBottomTutorial() {
+    TutorialCoachMark(
+      targets: [
+        // 残り回数
+        TargetFocus(
+          identify: "count",
+          keyTarget: keyRemain,
+          enableOverlayTab: true,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, __) => _bubble("1日5回まで記録できます"),
+            ),
+          ],
+        ),
+
+        // 追加
+        TargetFocus(
+          identify: "add",
+          keyTarget: keyAdd,
+          enableOverlayTab: true,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, __) => _bubble("パラメータは最大8個まで追加できます"),
+            ),
+          ],
+        ),
+
+        // 削除
+        TargetFocus(
+          identify: "delete",
+          keyTarget: keyDelete,
+          enableOverlayTab: true,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, __) => _bubble("不要なパラメータは削除できます"),
+            ),
+          ],
+        ),
+      ],
       onFinish: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("使い方OK！")),
+          const SnackBar(content: Text("使い方OK！")),
         );
-      },
-      onSkip: () {
-        print("スキップされた");
-        return true;
       },
     ).show(context: context);
   }
@@ -280,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (isFirst) {
       await prefs.setBool('isFirst', false);
-      showTutorial();
+      showTutorialStep1();
     }
   }
 
@@ -700,6 +589,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context: context,
     builder: (context) {
       return AlertDialog(
+        key: keyResultDialog,
         title: const Text("出来栄えを選択"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
