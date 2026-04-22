@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 MediaQuery.of(context).size.height / 2 - 150,
               ),
             ),
+            enableOverlayTab: true,
             contents: [
               TargetContent(
                 align: ContentAlign.top,
