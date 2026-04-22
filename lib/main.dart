@@ -91,8 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
         targets: [
           TargetFocus(
             identify: "result",
-            keyTarget: keyResultDialog,
-            enableOverlayTab: true,
+            targetPosition: TargetPosition(
+              const Size(250, 300), // ダイアログサイズ（だいたいでOK）
+              Offset(
+                MediaQuery.of(context).size.width / 2 - 125,
+                MediaQuery.of(context).size.height / 2 - 150,
+              ),
+            ),
             contents: [
               TargetContent(
                 align: ContentAlign.top,
