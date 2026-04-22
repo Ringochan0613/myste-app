@@ -43,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
       TargetFocus(
         identify: "param",
         keyTarget: keyParam,
+        enableOverlayTab: true,
+        enableTargetTab: true,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -57,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
       TargetFocus(
         identify: "result",
         keyTarget: keyParam,
+        enableOverlayTab: true,
+        enableTargetTab: true,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -71,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
       TargetFocus(
         identify: "count",
         keyTarget: keyRemain,
+        enableOverlayTab: true,
+        enableTargetTab: true,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -85,6 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
       TargetFocus(
         identify: "add",
         keyTarget: keyAdd,
+        enableOverlayTab: true,
+        enableTargetTab: true,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -99,6 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
       TargetFocus(
         identify: "delete",
         keyTarget: keyDelete,
+        enableOverlayTab: true,
+        enableTargetTab: true,
         contents: [
           TargetContent(
             align: ContentAlign.top,
