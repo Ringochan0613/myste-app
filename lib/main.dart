@@ -46,12 +46,39 @@ class _HomeScreenState extends State<HomeScreen> {
         enableOverlayTab: true,
         enableTargetTab: true,
         contents: [
+          // TargetContent(
+          //   align: ContentAlign.bottom,
+          //   child: Text(
+          //     "パラメータをタップすると記録できます",
+          //     style: TextStyle(color: Colors.white, fontSize: 16),
+          //   ),
+          // ),
           TargetContent(
-            align: ContentAlign.bottom,
-            child: Text(
-              "パラメータをタップすると記録できます",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  "パラメータをタップすると記録できます",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -62,12 +89,39 @@ class _HomeScreenState extends State<HomeScreen> {
         enableOverlayTab: true,
         enableTargetTab: true,
         contents: [
+          // TargetContent(
+          //   align: ContentAlign.bottom,
+          //   child: Text(
+          //     "出来栄え（良い・普通・悪い）を選びます",
+          //     style: TextStyle(color: Colors.white, fontSize: 16),
+          //   ),
+          // ),
           TargetContent(
-            align: ContentAlign.bottom,
-            child: Text(
-              "出来栄え（良い・普通・悪い）を選びます",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  "出来栄え（良い・普通・悪い）を選びます",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -78,12 +132,39 @@ class _HomeScreenState extends State<HomeScreen> {
         enableOverlayTab: true,
         enableTargetTab: true,
         contents: [
+          // TargetContent(
+          //   align: ContentAlign.top,
+          //   child: Text(
+          //     "1日5回まで記録できます",
+          //     style: TextStyle(color: Colors.white, fontSize: 16),
+          //   ),
+          // ),
           TargetContent(
             align: ContentAlign.top,
-            child: Text(
-              "1日5回まで記録できます",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            builder: (context, controller) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  "1日5回まで記録できます",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -94,12 +175,39 @@ class _HomeScreenState extends State<HomeScreen> {
         enableOverlayTab: true,
         enableTargetTab: true,
         contents: [
+          // TargetContent(
+          //   align: ContentAlign.top,
+          //   child: Text(
+          //     "パラメータは最大8個まで追加できます",
+          //     style: TextStyle(color: Colors.white, fontSize: 16),
+          //   ),
+          // ),
           TargetContent(
             align: ContentAlign.top,
-            child: Text(
-              "パラメータは最大8個まで追加できます",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            builder: (context, controller) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  "パラメータは最大8個まで追加できます",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -110,12 +218,39 @@ class _HomeScreenState extends State<HomeScreen> {
         enableOverlayTab: true,
         enableTargetTab: true,
         contents: [
+          // TargetContent(
+          //   align: ContentAlign.top,
+          //   child: Text(
+          //     "不要なパラメータは削除できます",
+          //     style: TextStyle(color: Colors.white, fontSize: 16),
+          //   ),
+          // ),
           TargetContent(
             align: ContentAlign.top,
-            child: Text(
-              "不要なパラメータは削除できます",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            builder: (context, controller) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  "不要なパラメータは削除できます",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
