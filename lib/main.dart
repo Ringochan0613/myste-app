@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,18 +33,129 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey keyParam = GlobalKey();
+  final GlobalKey keyRemain = GlobalKey();
+  final GlobalKey keyAdd = GlobalKey();
+  final GlobalKey keyDelete = GlobalKey();
+  // チュートリアル関数
+  void showTutorial() {
+    final targets = [
+      TargetFocus(
+        identify: "param",
+        keyTarget: keyParam,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Text(
+              "パラメータをタップすると記録できます",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+
+      TargetFocus(
+        identify: "result",
+        keyTarget: keyParam,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Text(
+              "出来栄え（良い・普通・悪い）を選びます",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+
+      TargetFocus(
+        identify: "count",
+        keyTarget: keyRemain,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: Text(
+              "1日5回まで記録できます",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+
+      TargetFocus(
+        identify: "add",
+        keyTarget: keyAdd,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: Text(
+              "パラメータは最大8個まで追加できます",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+
+      TargetFocus(
+        identify: "delete",
+        keyTarget: keyDelete,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: Text(
+              "不要なパラメータは削除できます",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.7,
+      textSkip: "スキップ",
+      onFinish: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("使い方OK！")),
+        );
+      },
+      onSkip: () {
+        print("スキップされた");
+        return true;
+      },
+    ).show(context: context);
+  }
+
+  // 初回判定
+  Future<void> checkFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirst = prefs.getBool('isFirst') ?? true;
+
+    if (isFirst) {
+      await prefs.setBool('isFirst', false);
+      showTutorial();
+    }
+  }
+
   final random = Random();
   List<Map<String, dynamic>> parameters = [];
   int todayCount = 0;
   String todayKey = "";
   Color bgColor = Colors.white;
   BannerAd? _bannerAd;
+  bool isAdLoaded = false;
 
   // 広告
   @override
   void initState() {
     super.initState();  
     loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 300));
+      checkFirstLaunch(); // ←ここに移動🔥
+    });
     _bannerAd = BannerAd(
       adUnitId: Platform.isIOS
           ?'ca-app-pub-2166954523208068/6803285524'
@@ -54,8 +166,13 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: BannerAdListener(
         onAdLoaded: (_) {
           print('広告ロード成功');
+          if (!mounted) return;
+          setState((){
+            isAdLoaded = true;
+          });
         },
-        onAdFailedToLoad: (_, error) {
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
           print('広告失敗: $error');
         },
       ),
@@ -123,7 +240,17 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setInt('bgColor', bgColor.value);
   }
 
+  void checkDateReset() {
+    final newKey = getTodayKey();
+    if (newKey != todayKey) {
+      todayKey = newKey;
+      todayCount = 0;
+      saveData();
+    }
+  }
+
   void increaseParam(int index) {
+    checkDateReset();
     if (todayCount >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('今日はもう5回実行済み！')),
@@ -390,6 +517,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void increaseParamWithResult(int index, String type) {
+    checkDateReset();
     int add = getWeightedValue(type);
 
     setState(() {
@@ -559,6 +687,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: GestureDetector(
+                          key: index ==0 ? keyParam : null,
                           onTap: () => showResultDialog(index),
                           child: Stack(
                             children: [
@@ -572,17 +701,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               /// 名前
-                              Positioned(
-                                left: 12,
-                                top: 10,
-                                child: Text(p['name']),
+                              Positioned.fill(
+                                child: Align(
+                                  alignment: Alignment(-0.9, 0.15), // ←ここで下げる
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 12),
+                                    child: Text(p['name']),
+                                  ),
+                                ),
                               ),
 
                               /// 数値
-                              Positioned(
-                                right: 12,
-                                top: 10,
-                                child: Text("${p['value']}"),
+                              Positioned.fill(
+                                child: Align(
+                                  alignment: Alignment(0.9, 0.15), // ←右 + 少し下
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: Text("${p['value']}"),
+                                  ),
+                                ),
                               ),
 
                               /// +演出
@@ -624,6 +761,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               /// 残り回数（全幅にする🔥）
               Stack(
+                key: keyRemain,
                 children: [
                   Image.asset(
                     'assets/images/zan.png',
@@ -651,6 +789,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   /// 追加
                   Expanded(
                     child: GestureDetector(
+                      key: keyAdd,
                       onTap: addParameter,
                       child: Stack(
                         alignment: Alignment.center,
@@ -674,6 +813,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   /// 削除
                   Expanded(
                     child: GestureDetector(
+                      key: keyDelete,
                       onTap: selectDeleteParameter,
                       child: Stack(
                         alignment: Alignment.center,
@@ -715,7 +855,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               
-              if (_bannerAd != null)
+              if (_bannerAd != null && isAdLoaded)
                 Container(
                   alignment: Alignment.center,
                   height: 50,
